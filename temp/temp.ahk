@@ -46,26 +46,34 @@ Else { ; Close window if currently the active window
 Return
 
 ^!s::
-; Set working directory
-SetWorkingDir, C:\Users\migge\AppData\Local\Microsoft\WindowsApps\SpotifyAB.SpotifyMusic_zpdnekdrzrea0
+SetTitleMatchMode, 2
+DetectHiddenWindows, On
+
+; Define the path to the Spotify executable
+spotifyPath := "C:\Users\migge\AppData\Local\Microsoft\WindowsApps\SpotifyAB.SpotifyMusic_zpdnekdrzrea0\Spotify.exe"
 
 ; Check if Spotify is running
-IfWinNotExist, ahk_exe Spotify.exe
-{
-    ; If Spotify is not running, start it
-    Run, spotify.exe
+If !ProcessExist("Spotify.exe") {
+    ; Start Spotify if it's not running
+    Run, %spotifyPath%
+    Sleep, 2000 ; Wait for Spotify to start (adjust the delay as needed)
 }
-else
-{
-    ; If Spotify is running, toggle its visibility
-    IfWinActive, ahk_exe Spotify.exe
-    {
-        ; If Spotify is active, minimize it to the tray
-        WinMinimize
-    }
-    else
-    {
-        ; If Spotify is not active, activate it
-        WinActivate
-    }
+
+; Check if Spotify is the active window
+If WinNotActive, ahk_exe Spotify.exe {
+    ; Activate Spotify window if it's not active
+    WinActivate
+} else {
+    ; Close Spotify if it's already active
+    WinClose
 }
+
+if (WinActive("ahk_exe Spotify.exe"))
+	WinMinimize
+
+ProcessExist(exeName) {
+    Process, Exist, %exeName%
+    return ErrorLevel
+}
+
+Return

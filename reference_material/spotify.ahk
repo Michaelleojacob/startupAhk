@@ -120,4 +120,28 @@ ProcessExist(exeName) {
 
 Return
 
-!^s::Reload ; Reload the script (adjust the hotkey as needed)
+
+^!s::
+; Set working directory
+SetWorkingDir, C:\Users\migge\AppData\Local\Microsoft\WindowsApps\SpotifyAB.SpotifyMusic_zpdnekdrzrea0
+
+; Check if Spotify is running
+IfWinNotExist, ahk_exe Spotify.exe
+{
+    ; If Spotify is not running, start it
+    Run, spotify.exe
+}
+else
+{
+    ; If Spotify is running, toggle its visibility
+    IfWinActive, ahk_exe Spotify.exe
+    {
+        ; If Spotify is active, minimize it to the tray
+        WinMinimize
+    }
+    else
+    {
+        ; If Spotify is not active, activate it
+        WinActivate
+    }
+}
