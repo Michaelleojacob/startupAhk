@@ -90,3 +90,34 @@ Else { ; Close window if currently the active window
 	Click ; Send a click to avoid the script becoming stuck if no input is recieved from the keyboard or mouse in between running the hotkey again
 	}
 Return
+
+SetTitleMatchMode, 2
+DetectHiddenWindows, On
+
+; Define the path to the Spotify executable
+spotifyPath := "C:\Users\migge\AppData\Local\Microsoft\WindowsApps\SpotifyAB.SpotifyMusic_zpdnekdrzrea0\Spotify.exe"
+
+; Check if Spotify is running
+If !ProcessExist("Spotify.exe") {
+    ; Start Spotify if it's not running
+    Run, %spotifyPath%
+    Sleep, 2000 ; Wait for Spotify to start (adjust the delay as needed)
+}
+
+; Check if Spotify is the active window
+IfWinNotActive, ahk_exe Spotify.exe {
+    ; Activate Spotify window if it's not active
+    WinActivate
+} else {
+    ; Close Spotify if it's already active
+    WinClose
+}
+
+ProcessExist(exeName) {
+    Process, Exist, %exeName%
+    return ErrorLevel
+}
+
+Return
+
+!^s::Reload ; Reload the script (adjust the hotkey as needed)
